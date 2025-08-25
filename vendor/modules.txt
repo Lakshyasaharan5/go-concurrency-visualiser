@@ -1,0 +1,26 @@
+# gioui.org v0.4.1
+## explicit; go 1.19
+gioui.org/f32
+gioui.org/internal/byteslice
+gioui.org/internal/f32
+gioui.org/internal/ops
+gioui.org/internal/scene
+gioui.org/op
+# github.com/cstockton/go-trace v0.0.0-20171025023017-dc4a0152211a
+## explicit
+github.com/cstockton/go-trace/encoding
+github.com/cstockton/go-trace/event
+# golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
+## explicit; go 1.20
+golang.org/x/exp/constraints
+golang.org/x/exp/slices
+golang.org/x/exp/trace
+golang.org/x/exp/trace/internal/event
+golang.org/x/exp/trace/internal/event/go122
+golang.org/x/exp/trace/internal/oldtrace
+golang.org/x/exp/trace/internal/version
+# honnef.co/go/gotraceui v0.5.0-0.dev.0.20240707115136-a47c61fbb6d0
+## explicit; go 1.21
+honnef.co/go/gotraceui/container
+honnef.co/go/gotraceui/mem
+honnef.co/go/gotraceui/trace/ptrace
