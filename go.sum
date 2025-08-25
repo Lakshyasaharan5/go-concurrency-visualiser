@@ -1,7 +1,5 @@
 gioui.org v0.4.1 h1:sCTw5Fexg0xg9CxYmbrkKtHXcobf0JMbl5XpF2TC/zc=
 gioui.org v0.4.1/go.mod h1:2atiYR4upH71/6ehnh6XsUELa7JZOrOHHNMDxGBZF0Q=
-github.com/cstockton/go-trace v0.0.0-20171025023017-dc4a0152211a h1:7OwtUH5H92+Nm+AlbtGM8SDzcwCirTYg5AJrwsvelo0=
-github.com/cstockton/go-trace v0.0.0-20171025023017-dc4a0152211a/go.mod h1:a7E/mZA8XYUHaIqPYdze4y+dA0rc3RofRl4VZ4RtteI=
 golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 h1:yixxcjnhBmY0nkL253HFVIm0JsFHwrHdT3Yh6szTnfY=
 golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8/go.mod h1:jj3sYF3dwk5D+ghuXyeI3r5MFf+NT2An6/9dOA95KSI=
 golang.org/x/tools v0.22.0 h1:gqSGLZqv+AI9lIQzniJ0nZDRG5GBPsSi+DRNHWNz6yA=
