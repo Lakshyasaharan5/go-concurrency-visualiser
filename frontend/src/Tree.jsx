@@ -44,6 +44,25 @@ export function Tree({ node, rootLeft = null, hoveredId, setHoveredId }) {
             position: "relative"
           }}
         >
+
+        {/* ID label near vertical border */}
+        <span
+          style={{
+            position: "absolute",
+            left: "-25px", // shift slightly left from border
+            top: `${node.percentStart}%`,
+            fontSize: "10px",
+            fontWeight: "bold",
+            color: "black",
+            background: "rgba(255,255,255,0.9)",
+            padding: "2px 4px",
+            borderRadius: "3px",
+            pointerEvents: "none"
+          }}
+        >
+          {node.id}
+        </span>
+
           {/* hover detection only on vertical colored part */}
           <div
             onMouseEnter={() => setHoveredId(node.id)}
