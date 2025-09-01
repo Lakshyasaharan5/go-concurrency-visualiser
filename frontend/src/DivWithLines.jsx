@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect, useState } from "react";
 import { Timeline } from "./Timeline";
 
-function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue", highlight = false }) {
+function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue", highlight = false, hideWhenNotHovered = false }) {
   const [lineStyle, setLineStyle] = useState({ top: 0, left: 0, width: 0 });
 
   useLayoutEffect(() => {
@@ -36,10 +36,10 @@ function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue"
         top: lineStyle.top,
         width: lineStyle.width,
         borderTop: highlight ? `4px solid ${color}` : `2px dashed ${color}`,
-        opacity: highlight ? 1 : 0.3, // only highlight the hovered node
+        opacity: hideWhenNotHovered ? (highlight ? 1 : 0) : (highlight ? 1 : 0.3), // logic here
         pointerEvents: "none",
         zIndex: 9999,
-        transition: "all 0.2s ease" // smooth pop effect
+        transition: "all 0.2s ease"
       }}
     />
   );
@@ -62,6 +62,7 @@ function Tree({ node, rootLeft = null, hoveredId, setHoveredId }) {
   }, [rootLeft]);
 
   const effectiveRootLeft = rootLeft ?? myLeft;
+  const isHovered = hoveredId === node.id;
 
   return (
     <>
@@ -113,20 +114,31 @@ function Tree({ node, rootLeft = null, hoveredId, setHoveredId }) {
         ))}
       </div>
 
-      {/* connector: highlight only if THIS node is hovered */}
+      {/* START connector (faint when not hovered, solid when hovered) */}
       {rootLeft !== null && (
         <Connector
           targetRef={ref}
           startPercent={node.percentStart / 100}
           rootLeft={effectiveRootLeft}
           color={node.color}
-          highlight={hoveredId === node.id}
+          highlight={isHovered}
+        />
+      )}
+
+      {/* END connector (completely hidden until hover) */}
+      {rootLeft !== null && (
+        <Connector
+          targetRef={ref}
+          startPercent={node.percentEnd / 100}
+          rootLeft={effectiveRootLeft}
+          color={node.color}
+          highlight={isHovered}
+          hideWhenNotHovered // new flag
         />
       )}
     </>
   );
 }
-
 
 export function DivWithLines() {
   const [hoveredId, setHoveredId] = useState(null);
