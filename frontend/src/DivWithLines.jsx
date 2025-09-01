@@ -62,7 +62,7 @@ function Tree({ node, parentLeft = 0 }) {
         style={{
           flex: 1,
           display: "flex",
-          height: "100vh",
+          height: "100%",
           marginLeft: "15px",
           borderLeft: "12px solid transparent",
           borderImage: `linear-gradient(
@@ -96,7 +96,19 @@ function Tree({ node, parentLeft = 0 }) {
 }
 
 export function DivWithLines() {
-  return <Tree node={data} />;
+  return (
+    <div
+      style={{
+        width: "50%",       // you can change width
+        height: "80vh",     // you can change height
+        margin: "100px auto",   // center horizontally and add margin on top
+        border: "1px solid #ccc",
+        position: "relative",
+      }}
+    >
+      <Tree node={data} />
+    </div>
+  );
 }
 
 const data = {
