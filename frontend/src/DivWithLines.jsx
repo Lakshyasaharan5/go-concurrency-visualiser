@@ -1,6 +1,6 @@
 import { useRef, useLayoutEffect, useState } from "react";
 
-function Connector({ targetRef, startPercent = 0.3, fromLeft = 0 }) {
+function Connector({ targetRef, startPercent = 0.3, fromLeft = 0, color = "blue" }) {
   const [lineStyle, setLineStyle] = useState({ top: 0, left: 0, width: 0 });
 
   useLayoutEffect(() => {
@@ -34,7 +34,7 @@ function Connector({ targetRef, startPercent = 0.3, fromLeft = 0 }) {
         left: lineStyle.left,
         top: lineStyle.top,
         width: lineStyle.width,
-        borderTop: "2px solid blue",
+        borderTop: `2px solid ${color}`,   // <-- use node color
         pointerEvents: "none",
         zIndex: 9999
       }}
@@ -69,11 +69,11 @@ function Tree({ node, parentLeft = 0 }) {
             to bottom,
             transparent 0,
             transparent ${node.percentStart}%,
-            blue ${node.percentStart}%,
-            blue ${node.percentEnd}%,
+            ${node.color} ${node.percentStart}%,
+            ${node.color} ${node.percentEnd}%,
             transparent ${node.percentEnd}%,
             transparent 100%
-          ) 1`,
+          ) 1`,   // <-- gradient uses node.color
           background: "#fff",
           borderRadius: 8,
           boxShadow: "0 1px 4px rgba(0,0,0,.15)"
@@ -89,6 +89,7 @@ function Tree({ node, parentLeft = 0 }) {
         targetRef={ref}
         startPercent={node.percentStart / 100}
         fromLeft={parentLeft}
+        color={node.color}   // <-- pass color down
       />
     </>
   );
@@ -104,6 +105,7 @@ const data = {
   end: 30,
   percentStart: 0,
   percentEnd: 100,
+  color: "#000000", // root = black
   children: [
     {
       id: 37,
@@ -111,6 +113,7 @@ const data = {
       end: 15,
       percentStart: 0,
       percentEnd: 50,
+      color: "#FF7F0E", // vivid orange
       children: [
         {
           id: 3,
@@ -118,6 +121,7 @@ const data = {
           end: 25,
           percentStart: 50,
           percentEnd: 83.3,
+          color: "#FFB870", // lighter orange
           children: []
         }
       ]
@@ -128,6 +132,7 @@ const data = {
       end: 15,
       percentStart: 0,
       percentEnd: 50,
+      color: "#1F77B4", // vivid blue
       children: [
         {
           id: 19,
@@ -135,6 +140,7 @@ const data = {
           end: 17,
           percentStart: 50,
           percentEnd: 56.7,
+          color: "#6BAED6", // lighter blue
           children: []
         }
       ]
