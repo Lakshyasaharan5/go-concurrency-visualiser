@@ -61,10 +61,10 @@ function Tree({ node }) {
           borderImage: `linear-gradient(
             to bottom,
             transparent 0,
-            transparent 30%,
-            blue 30%,
-            blue 70%,
-            transparent 70%,
+            transparent ${node.percentStart}%,
+            blue ${node.percentStart}%,
+            blue ${node.percentEnd}%,
+            transparent ${node.percentEnd}%,
             transparent 100%
           ) 1`,
           background: "#fff",
@@ -78,31 +78,55 @@ function Tree({ node }) {
       </div>
 
       {/* connector for this node */}
-      <Connector targetRef={ref} startPercent={0.3} />
+      <Connector targetRef={ref} startPercent={node.percentStart / 100} />
     </>
   );
 }
 
+export function DivWithLines() {
+  return <Tree node={data} />;
+}
+
 const data = {
   id: 1,
+  start: 0,
+  end: 30,
+  percentStart: 0,
+  percentEnd: 100,
   children: [
     {
-      id: 10,
+      id: 37,
+      start: 0,
+      end: 15,
+      percentStart: 0,
+      percentEnd: 50,
       children: [
-        { id: 101, children: [] },
-        { id: 102, children: [] }
+        {
+          id: 3,
+          start: 15,
+          end: 25,
+          percentStart: 50,
+          percentEnd: 83.3,
+          children: []
+        }
       ]
     },
     {
-      id: 20,
+      id: 38,
+      start: 0,
+      end: 15,
+      percentStart: 0,
+      percentEnd: 50,
       children: [
-        { id: 201, children: [] },
-        { id: 202, children: [] }
+        {
+          id: 19,
+          start: 15,
+          end: 17,
+          percentStart: 50,
+          percentEnd: 56.7,
+          children: []
+        }
       ]
     }
   ]
 };
-
-export function DivWithLines() {
-  return <Tree node={data} />;
-}
