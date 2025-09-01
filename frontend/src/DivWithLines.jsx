@@ -1,14 +1,15 @@
 import { useRef, useLayoutEffect, useState } from "react";
 
-function Connector({ targetRef, startPercent = 0.3 }) {
-  const [lineStyle, setLineStyle] = useState({ top: 0, width: 0 });
+function Connector({ targetRef, startPercent = 0.3, fromLeft = 0 }) {
+  const [lineStyle, setLineStyle] = useState({ top: 0, left: 0, width: 0 });
 
   useLayoutEffect(() => {
     function position() {
       const rect = targetRef.current.getBoundingClientRect();
       setLineStyle({
         top: rect.top + rect.height * startPercent,
-        width: rect.left
+        left: fromLeft,
+        width: rect.left - fromLeft
       });
     }
     position();
@@ -24,13 +25,13 @@ function Connector({ targetRef, startPercent = 0.3 }) {
       window.removeEventListener("scroll", position);
       window.removeEventListener("resize", position);
     };
-  }, [startPercent]);
+  }, [startPercent, fromLeft]);
 
   return (
     <div
       style={{
         position: "fixed",
-        left: 0,
+        left: lineStyle.left,
         top: lineStyle.top,
         width: lineStyle.width,
         borderTop: "2px solid blue",
@@ -41,12 +42,18 @@ function Connector({ targetRef, startPercent = 0.3 }) {
   );
 }
 
-function Tree({ node }) {
+function Tree({ node, parentLeft = 0 }) {
   const ref = useRef(null);
+  const [myLeft, setMyLeft] = useState(0);
 
-  if (!node) {
-    return null;
-  }
+  if (!node) return null;
+
+  useLayoutEffect(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setMyLeft(rect.left);
+    }
+  }, []);
 
   return (
     <>
@@ -73,12 +80,16 @@ function Tree({ node }) {
         }}
       >
         {node.children.map((child, idx) => (
-          <Tree key={idx} node={child} />
+          <Tree key={idx} node={child} parentLeft={myLeft} />
         ))}
       </div>
 
-      {/* connector for this node */}
-      <Connector targetRef={ref} startPercent={node.percentStart / 100} />
+      {/* connector: from parent's border to me */}
+      <Connector
+        targetRef={ref}
+        startPercent={node.percentStart / 100}
+        fromLeft={parentLeft}
+      />
     </>
   );
 }
