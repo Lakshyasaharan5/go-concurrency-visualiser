@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect, useState } from "react";
 import { Timeline } from "./Timeline";
 
-function Connector({ targetRef, startPercent = 0.3, fromLeft = 0, color = "blue" }) {
+function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue" }) {
   const [lineStyle, setLineStyle] = useState({ top: 0, left: 0, width: 0 });
 
   useLayoutEffect(() => {
@@ -9,8 +9,8 @@ function Connector({ targetRef, startPercent = 0.3, fromLeft = 0, color = "blue"
       const rect = targetRef.current.getBoundingClientRect();
       setLineStyle({
         top: rect.top + rect.height * startPercent,
-        left: fromLeft,
-        width: rect.left - fromLeft
+        left: rootLeft,
+        width: rect.left - rootLeft
       });
     }
     position();
@@ -26,7 +26,7 @@ function Connector({ targetRef, startPercent = 0.3, fromLeft = 0, color = "blue"
       window.removeEventListener("scroll", position);
       window.removeEventListener("resize", position);
     };
-  }, [startPercent, fromLeft]);
+  }, [startPercent, rootLeft]);
 
   return (
     <div
@@ -35,7 +35,8 @@ function Connector({ targetRef, startPercent = 0.3, fromLeft = 0, color = "blue"
         left: lineStyle.left,
         top: lineStyle.top,
         width: lineStyle.width,
-        borderTop: `2px solid ${color}`,
+        borderTop: `2px dashed ${color}`,
+        opacity: 0.5,
         pointerEvents: "none",
         zIndex: 9999
       }}
@@ -43,7 +44,7 @@ function Connector({ targetRef, startPercent = 0.3, fromLeft = 0, color = "blue"
   );
 }
 
-function Tree({ node, parentLeft = 0 }) {
+function Tree({ node, rootLeft = null }) {
   const ref = useRef(null);
   const [myLeft, setMyLeft] = useState(0);
 
@@ -52,9 +53,14 @@ function Tree({ node, parentLeft = 0 }) {
   useLayoutEffect(() => {
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
-      setMyLeft(rect.left);
+      // capture root left position once
+      if (rootLeft === null) {
+        setMyLeft(rect.left);
+      }
     }
-  }, []);
+  }, [rootLeft]);
+
+  const effectiveRootLeft = rootLeft ?? myLeft;
 
   return (
     <>
@@ -77,21 +83,23 @@ function Tree({ node, parentLeft = 0 }) {
           ) 1`,
           background: "#fff",
           borderRadius: 8,
-          boxShadow: "0 1px 4px rgba(0,0,0,.15)"
+          boxShadow: "0 1px 4px rgba(0, 0, 0, 0.07)"
         }}
       >
         {node.children.map((child, idx) => (
-          <Tree key={idx} node={child} parentLeft={myLeft} />
+          <Tree key={idx} node={child} rootLeft={effectiveRootLeft} />
         ))}
       </div>
 
-      {/* connector: from parent's border to me */}
-      <Connector
-        targetRef={ref}
-        startPercent={node.percentStart / 100}
-        fromLeft={parentLeft}
-        color={node.color}
-      />
+      {/* connector: always from root’s border */}
+      {rootLeft !== null && (
+        <Connector
+          targetRef={ref}
+          startPercent={node.percentStart / 100}
+          rootLeft={effectiveRootLeft}
+          color={node.color}
+        />
+      )}
     </>
   );
 }
