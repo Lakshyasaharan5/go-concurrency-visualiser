@@ -1,7 +1,7 @@
 import { useRef, useLayoutEffect, useState } from "react";
 import { Timeline } from "./Timeline";
 
-function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue" }) {
+function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue", highlight = false }) {
   const [lineStyle, setLineStyle] = useState({ top: 0, left: 0, width: 0 });
 
   useLayoutEffect(() => {
@@ -35,16 +35,17 @@ function Connector({ targetRef, startPercent = 0.3, rootLeft = 0, color = "blue"
         left: lineStyle.left,
         top: lineStyle.top,
         width: lineStyle.width,
-        borderTop: `2px dashed ${color}`,
-        opacity: 0.5,
+        borderTop: highlight ? `4px solid ${color}` : `2px dashed ${color}`,
+        opacity: highlight ? 1 : 0.3, // only highlight the hovered node
         pointerEvents: "none",
-        zIndex: 9999
+        zIndex: 9999,
+        transition: "all 0.2s ease" // smooth pop effect
       }}
     />
   );
 }
 
-function Tree({ node, rootLeft = null }) {
+function Tree({ node, rootLeft = null, hoveredId, setHoveredId }) {
   const ref = useRef(null);
   const [myLeft, setMyLeft] = useState(0);
 
@@ -83,28 +84,53 @@ function Tree({ node, rootLeft = null }) {
           ) 1`,
           background: "#fff",
           borderRadius: 8,
-          boxShadow: "0 1px 4px rgba(0, 0, 0, 0.07)"
+          boxShadow: "0 1px 4px rgba(0, 0, 0, 0.07)",
+          position: "relative" // needed for overlay positioning
         }}
       >
+        {/* invisible overlay for hover detection only on vertical colored part */}
+        <div
+          onMouseEnter={() => setHoveredId(node.id)}
+          onMouseLeave={() => setHoveredId(null)}
+          style={{
+            position: "absolute",
+            left: "-10px",
+            top: `${node.percentStart}%`,
+            height: `${node.percentEnd - node.percentStart}%`,
+            width: "10px", // matches the border thickness
+            cursor: "pointer"
+          }}
+        />
+
         {node.children.map((child, idx) => (
-          <Tree key={idx} node={child} rootLeft={effectiveRootLeft} />
+          <Tree
+            key={idx}
+            node={child}
+            rootLeft={effectiveRootLeft}
+            hoveredId={hoveredId}
+            setHoveredId={setHoveredId}
+          />
         ))}
       </div>
 
-      {/* connector: always from root’s border */}
+      {/* connector: highlight only if THIS node is hovered */}
       {rootLeft !== null && (
         <Connector
           targetRef={ref}
           startPercent={node.percentStart / 100}
           rootLeft={effectiveRootLeft}
           color={node.color}
+          highlight={hoveredId === node.id}
         />
       )}
     </>
   );
 }
 
+
 export function DivWithLines() {
+  const [hoveredId, setHoveredId] = useState(null);
+
   return (
     <div
       style={{
@@ -122,7 +148,7 @@ export function DivWithLines() {
 
       {/* Tree */}
       <div style={{ flex: 1 }}>
-        <Tree node={data} />
+        <Tree node={data} hoveredId={hoveredId} setHoveredId={setHoveredId} />
       </div>
     </div>
   );
