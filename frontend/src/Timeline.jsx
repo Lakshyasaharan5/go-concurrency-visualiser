@@ -44,7 +44,7 @@ export function Timeline({ start, end }) {
                 transform: "translateY(-50%)"
               }}
             >
-              <span style={{ marginRight: "6px" }}>{t}s</span>
+              <span style={{ marginRight: "6px", fontSize: "15px" }}>{t}s</span>
               <div
                 style={{
                   width: "8px",
