@@ -13,6 +13,23 @@ export function Timeline({ start, end }) {
           position: "relative"
         }}
       >
+
+      {/* Vertical axis label */}
+      <span
+        style={{
+          position: "absolute",
+          left: "-45px",  // shift left of the timeline
+          top: "50%",
+          transform: "rotate(-90deg) translateY(-50%)",
+          transformOrigin: "center",
+          fontSize: "20px",
+          fontWeight: "bold",
+          color: "#333"
+        }}
+      >
+        Time (s)
+      </span>
+
         {ticks.map((t, i) => {
           const percent = (i / (ticks.length - 1)) * 100;
           return (
@@ -27,7 +44,7 @@ export function Timeline({ start, end }) {
                 transform: "translateY(-50%)"
               }}
             >
-              <span style={{ marginRight: "6px" }}>{t}</span>
+              <span style={{ marginRight: "6px" }}>{t}s</span>
               <div
                 style={{
                   width: "8px",
