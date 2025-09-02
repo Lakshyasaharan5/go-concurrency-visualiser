@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"sort"
 	"strings"
@@ -157,10 +158,13 @@ func main() {
 
 // Generate N distinct colors evenly spaced around the HSL color wheel
 func generatePalette(n int) []string {
+	rand.Seed(time.Now().UnixNano())
 	colors := make([]string, n)
 	for i := 0; i < n; i++ {
-		hue := float64(i) * 360.0 / float64(n) // distribute evenly
-		colors[i] = hslToHex(hue, 70, 50)      // saturation 70%, lightness 50%
+		hue := float64(i) * 360.0 / float64(n) // evenly spaced hue
+		sat := 50 + rand.Float64()*40          // random saturation [50–90%]
+		light := 40 + rand.Float64()*30        // random lightness [40–70%]
+		colors[i] = hslToHex(hue, sat, light)
 	}
 	return colors
 }
