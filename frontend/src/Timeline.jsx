@@ -18,7 +18,7 @@ export function Timeline({ start, end }) {
       <span
         style={{
           position: "absolute",
-          left: "-45px",  // shift left of the timeline
+          left: "-15px",  // shift left of the timeline
           top: "50%",
           transform: "rotate(-90deg) translateY(-50%)",
           transformOrigin: "center",
@@ -44,7 +44,7 @@ export function Timeline({ start, end }) {
                 transform: "translateY(-50%)"
               }}
             >
-              <span style={{ marginRight: "6px", fontSize: "15px" }}>{t}s</span>
+              <span style={{ marginRight: "6px", fontSize: "12px" }}>{t}s</span>
               <div
                 style={{
                   width: "8px",
