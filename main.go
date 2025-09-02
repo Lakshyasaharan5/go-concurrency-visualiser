@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"time"
 
@@ -54,7 +55,7 @@ func main() {
 
 	nodes := map[int64]*Node{}
 
-	// Build nodes (cast GoID -> int64 where needed)
+	// Build nodes
 	for _, g := range tr.Goroutines {
 		if g.Function == nil {
 			continue
@@ -128,10 +129,20 @@ func main() {
 			n.Color = lighten(parentColor, 0.3)
 		}
 
+		// sort children by start time before assigning
+		sort.Slice(n.Children, func(i, j int) bool {
+			return n.Children[i].Start < n.Children[j].Start
+		})
+
 		for i, c := range n.Children {
 			assign(c, depth+1, n.Color, i)
 		}
 	}
+
+	// sort root children as well
+	sort.Slice(root.Children, func(i, j int) bool {
+		return root.Children[i].Start < root.Children[j].Start
+	})
 
 	for i, c := range root.Children {
 		assign(c, 1, "", i)
