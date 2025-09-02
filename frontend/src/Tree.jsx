@@ -76,6 +76,30 @@ export function Tree({ node, rootLeft = null, hoveredId, setHoveredId }) {
               cursor: "pointer"
             }}
           />
+
+          {/* Tooltip (only visible when hovered) */}
+          {isHovered && (
+            <div
+              style={{
+                position: "absolute",
+                left: "15px",
+                top: `${node.percentStart}%`,
+                background: "#333",
+                color: "#fff",
+                fontSize: "11px",
+                padding: "4px 6px",
+                borderRadius: "4px",
+                whiteSpace: "nowrap",
+                transform: "translateY(-50%)",
+                zIndex: 10000
+              }}
+            >
+              <strong>ID:</strong> {node.id} <br />
+              <strong>Start:</strong> {node.start} <br />
+              <strong>End:</strong> {node.end} <br />
+              <strong>Duration:</strong> {node.end - node.start}s
+            </div>
+          )}
   
           {node.children.map((child, idx) => (
             <Tree
