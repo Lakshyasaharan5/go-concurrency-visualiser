@@ -1,8 +1,5 @@
 # Go Concurrency Visualiser
 
-<video src="./docs/assets/hover-gif.mp4" width="80%" autoplay loop muted playsinline></video>
-
-
 **Go Concurrency Visualiser** is an interactive tool that transforms raw Go execution traces into clear, beautiful visualizations right in your browser. Instead of digging through plain text logs or struggling with dense tools, you can **see goroutines as a timeline**, explore parent–child relationships, and understand the flow of concurrent programs at a glance.
 
 - Highlights the **structure of concurrency** — from goroutines spawned by `main` to deeply nested children.
@@ -11,6 +8,10 @@
 - Built with Go for trace parsing and React for smooth frontend rendering.
 
 Whether you’re debugging tricky race conditions, teaching concurrency concepts, or just curious how goroutines actually run, this project gives you a **new lens into Go’s concurrency model**.
+
+<p align="center">
+  <img src="./docs/assets/hover-gif.gif" alt="Demo" width="600"/>
+</p>
 
 ## Usage and Examples
 
@@ -44,6 +45,32 @@ func main() {
     }
 }
 ```
+
+**Another way to do this**
+
+```go
+func main() {
+    go func() {          // child-1
+        go func() {      // grandchild-1
+            go func() {  // great-grandchild-1
+                // some logic
+            }()
+        }()
+    }()
+
+    go func() {          // child-2
+        go func() {      // grandchild-2
+            go func() {  // great-grandchild-2
+                // some logic
+            }()
+        }()
+    }()
+
+    // repeated 4 times
+}
+
+```
+
 
 ### Sequential Goroutines
 
@@ -80,9 +107,39 @@ In the visualizer, this shows up as a **broad wave of goroutines starting at the
 
 This is a common concurrency design pattern in Go — for example, when fetching data from multiple APIs in parallel, processing large datasets in chunks, or running distributed tasks simultaneously before aggregating results.
 
+### Deep Recursive Spawns
+
+<img src="./docs/assets/deep-recursion.png" width="80%" height="80%">
+
+In this example, the main goroutine recursively spawns a child, which in turn spawns another child, and so on. Each goroutine begins only after its parent has started, creating a chain of dependencies that stretches deeper with every level.
+
+The visualization clearly shows the recursive nature: a staircase of goroutines, each nested within the lifespan of its ancestor. Colors still distinguish top-level goroutines, while the gradual fan-out demonstrates how recursion can generate a large number of lightweight concurrent tasks.
+
+This pattern is common in problems like tree traversal, recursive search, or divide-and-conquer algorithms, where each function call spawns a new goroutine for the next branch of work.
+
+**Example code structure**
+
+```go
+func main() {
+    // start recursion with depth 20
+    go spawnRecursive(20)
+}
+
+func spawnRecursive(depth int) {
+    if depth > 20 {
+        return
+    }
+
+    // spawn the next goroutine recursively
+    go spawnRecursive(depth + 1)
+
+    // ... some logic for this goroutine ...
+}
+```
+
 ### Interactive Hover Tooltips
 
-<img src="./docs/assets/hover.png" width="80%" height="80%">
+<img src="./docs/assets/hover-png.png" width="80%" height="80%">
 
 When you hover over any goroutine block in the chart, a tooltip pops up showing:
 
