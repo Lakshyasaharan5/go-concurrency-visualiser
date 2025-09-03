@@ -1,5 +1,9 @@
 # Go Concurrency Visualiser
 
+<p align="center">
+  <img src="./docs/assets/hover-gif.gif" alt="Demo" width="600"/>
+</p>
+
 **Go Concurrency Visualiser** is an interactive tool that transforms raw Go execution traces into clear, beautiful visualizations right in your browser. Instead of digging through plain text logs or struggling with dense tools, you can **see goroutines as a timeline**, explore parent–child relationships, and understand the flow of concurrent programs at a glance.
 
 - Highlights the **structure of concurrency** — from goroutines spawned by `main` to deeply nested children.
@@ -9,9 +13,6 @@
 
 Whether you’re debugging tricky race conditions, teaching concurrency concepts, or just curious how goroutines actually run, this project gives you a **new lens into Go’s concurrency model**.
 
-<p align="center">
-  <img src="./docs/assets/hover-gif.gif" alt="Demo" width="600"/>
-</p>
 
 ## Usage and Examples
 
