@@ -1,5 +1,8 @@
 # Go Concurrency Visualiser
 
+<video src="./docs/assets/hover-gif.mp4" width="80%" autoplay loop muted playsinline></video>
+
+
 **Go Concurrency Visualiser** is an interactive tool that transforms raw Go execution traces into clear, beautiful visualizations right in your browser. Instead of digging through plain text logs or struggling with dense tools, you can **see goroutines as a timeline**, explore parent–child relationships, and understand the flow of concurrent programs at a glance.
 
 - Highlights the **structure of concurrency** — from goroutines spawned by `main` to deeply nested children.
@@ -13,7 +16,7 @@ Whether you’re debugging tricky race conditions, teaching concurrency concepts
 
 ### Nested Concurrency (Parent → Child → Grandchild)
 
-<img src="./docs/images/3-level-heirarchy.png" width="80%" height="80%">
+<img src="./docs/assets/3-level-heirarchy.png" width="80%" height="80%">
 
 
 In this run, the `main` goroutine creates **four independent children**, and each child goes on to spawn its own child and then a grandchild in sequence. The structure forms a clear three-level hierarchy: `main → child → grandchild`.
@@ -44,7 +47,7 @@ func main() {
 
 ### Sequential Goroutines
 
-<img src="./docs/images/sequential1.png" width="80%" height="80%">
+<img src="./docs/assets/sequential1.png" width="80%" height="80%">
 
 In this pattern, goroutines are started **one after another**, and each must finish before the next one begins. Instead of overlapping execution, the program enforces a strict order of progression. The timeline turns into a **stair-step structure**, where every block of work completes fully before passing control to the next goroutine.
 
@@ -69,7 +72,7 @@ func main() {
 
 ### Fan-Out / Fan-In Pattern
 
-<img src="./docs/images/fan-in-fan-out.png" width="80%" height="80%">
+<img src="./docs/assets/fan-in-fan-out.png" width="80%" height="80%">
 
 In this example, a single goroutine (the root) **fans out** by launching many worker goroutines at once. Each worker processes a piece of work concurrently. Later, the results are **fanned in** as the main goroutine (or another coordinator) waits for all workers to complete.
 
@@ -79,7 +82,7 @@ This is a common concurrency design pattern in Go — for example, when fetching
 
 ### Interactive Hover Tooltips
 
-<img src="./docs/images/hover.png" width="80%" height="80%">
+<img src="./docs/assets/hover.png" width="80%" height="80%">
 
 When you hover over any goroutine block in the chart, a tooltip pops up showing:
 
@@ -133,9 +136,7 @@ go run trace1.go
 This produces a `trace.out` file at the project root. 
 
 
-<div style="padding: 0.8em; border-left: 4px solid #4CAF50; background: #f9f9f9;">
-<strong> Tip:</strong> You can use your code as well, just make sure to keep it between trace.
-</div>
+> Tip: You can use your code as well, just make sure to keep it between trace.
 
 
 Run the backend parser to convert `trace.out` into frontend-readable JSON:
