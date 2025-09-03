@@ -112,20 +112,17 @@ This is a common concurrency design pattern in Go — for example, when fetching
 
 <img src="./docs/assets/deep-recursion.png" width="80%" height="80%">
 
-In this example, the main goroutine recursively spawns a child, which in turn spawns another child, and so on. Each goroutine begins only after its parent has started, creating a chain of dependencies that stretches deeper with every level.
+Sometimes a goroutine spawns another goroutine that does the same, and so on — creating a chain of recursive spawns. Each new goroutine starts only after its parent begins, leading to a deep nested timeline where every block is contained inside the lifespan of its ancestor.
 
-The visualization clearly shows the recursive nature: a staircase of goroutines, each nested within the lifespan of its ancestor. Colors still distinguish top-level goroutines, while the gradual fan-out demonstrates how recursion can generate a large number of lightweight concurrent tasks.
-
-This pattern is common in problems like tree traversal, recursive search, or divide-and-conquer algorithms, where each function call spawns a new goroutine for the next branch of work.
+The visualization shows this as a staircase of goroutines, each layer nested inside the previous one. Top-level colors still help differentiate, while lighter shades track the recursive depth. This is useful when modeling divide-and-conquer algorithms, recursive searches, or tree traversals where each call delegates new work further down.
 
 **Example code structure**
 
 ```go
 func main() {
-    // start recursion with depth 20
-    go spawnRecursive(20)
+    go spawnRecursive(1)
 }
-
+// recursion with depth upto 20
 func spawnRecursive(depth int) {
     if depth > 20 {
         return
@@ -213,3 +210,22 @@ npm run dev
 ```
 
 Open the link shown in the terminal (usually `http://localhost:5173`) in your browser.
+
+## Future Work
+
+Planned improvements and next steps for Go Concurrency Visualiser:
+
+- **Color-coded blocking times** – highlight when goroutines are blocked (e.g., on I/O or synchronization) using distinct colors for better visibility.  
+- **Channel visualization** – draw edges to show communication between goroutines via channels, making data flow easier to trace.  
+- **Automatic JSON pipeline** – remove the manual `go run main.go > frontend/src/data.js` step by passing trace data from backend to frontend automatically.  
+- **Docker support** – provide a ready-to-use Docker image so users can spin up the entire setup with a single command.  
+- **Command-line interface (CLI)** – add a lightweight CLI tool to generate traces, parse them, and launch the frontend without extra steps.  
+
+
+Contributions and suggestions are always welcome! ❤️
+
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+
