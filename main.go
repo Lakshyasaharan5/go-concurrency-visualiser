@@ -9,11 +9,10 @@ import (
 	"os"
 )
 
-// where uploaded trace will be saved
 const traceFilePath = "trace.out"
 
 func main() {
-	// handle file upload
+	// ---- File Upload ----
 	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
@@ -51,7 +50,7 @@ func main() {
 		fmt.Fprintln(w, "Trace uploaded successfully")
 	})
 
-	// serve parsed JSON
+	// ---- Serve Parsed JSON ----
 	http.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
@@ -69,6 +68,10 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(root)
 	})
+
+	// ---- Serve Frontend Build ----
+	fs := http.FileServer(http.Dir("./frontend/dist"))
+	http.Handle("/", fs) // root → index.html
 
 	log.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
