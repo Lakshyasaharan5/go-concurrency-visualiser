@@ -162,7 +162,7 @@ cd go-concurrency-visualiser
 
 **Install Go dependencies:**
 
-Make sure you have **Go 1.22+** installed. Then run
+Make sure you have **Go 1.24** installed. Then run
 
 ```bash
 go mod tidy
@@ -179,6 +179,15 @@ cd frontend
 npm install
 ```
 
+**Build the frontend**
+
+Build the static frontend files into frontend/dist/:
+
+```bash
+cd frontend
+sudo npm build dev
+```
+
 **Generate a trace file**
 
 Use one of the examples in `trace_generators` to create a trace:
@@ -193,23 +202,26 @@ This produces a `trace.out` file at the project root.
 
 > Tip: You can use your code as well, just make sure to keep it between trace.
 
+**Start the backend**
 
-Run the backend parser to convert `trace.out` into frontend-readable JSON:
-
-```bash
-go run main.go > frontend/src/data.js
-```
-
-**Start the frontend**
-
-Run the dev server:
+Our Go backend is going to serve the frontend.
 
 ```bash
-cd frontend
-npm run dev
+go run main.go 
 ```
 
-Open the link shown in the terminal (usually `http://localhost:5173`) in your browser.
+Open the link shown in the terminal (usually `http://localhost:8080`) in your browser.
+
+Upload your `trace.out` file and see the **MAGIC**
+
+### Docker Setup
+
+Make sure you have docker installed on your machine. Build the image and run it.
+
+```bash
+docker build -t go-concurrency-visualiser .
+docker run -p 8080:8080 go-concurrency-visualiser
+```
 
 ## Future Work
 
@@ -217,8 +229,6 @@ Planned improvements and next steps for Go Concurrency Visualiser:
 
 - **Color-coded blocking times** – highlight when goroutines are blocked (e.g., on I/O or synchronization) using distinct colors for better visibility.  
 - **Channel visualization** – draw edges to show communication between goroutines via channels, making data flow easier to trace.  
-- **Automatic JSON pipeline** – remove the manual `go run main.go > frontend/src/data.js` step by passing trace data from backend to frontend automatically.  
-- **Docker support** – provide a ready-to-use Docker image so users can spin up the entire setup with a single command.  
 - **Command-line interface (CLI)** – add a lightweight CLI tool to generate traces, parse them, and launch the frontend without extra steps.  
 
 
