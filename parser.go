@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"sort"
@@ -149,8 +147,8 @@ func ParseTrace() (*Node, error) {
 	}
 
 	// Print JSON
-	out, _ := json.MarshalIndent(root, "", "  ")
-	fmt.Println(string(out))
+	// out, _ := json.MarshalIndent(root, "", "  ")
+	// fmt.Println(string(out))
 
 	return root, nil
 }

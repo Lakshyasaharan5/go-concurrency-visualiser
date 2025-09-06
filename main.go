@@ -60,6 +60,18 @@ func main() {
 			return
 		}
 
+		// check if trace.out exists
+		if _, err := os.Stat(traceFilePath); os.IsNotExist(err) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error":   "no_trace",
+				"message": "No trace has been uploaded yet.",
+			})
+			return
+		}
+
+		// parse trace if file exists
 		root, err := ParseTrace()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
